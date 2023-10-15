@@ -1,7 +1,7 @@
 class Api::UsersController < ApplicationController
 
-  include JsonWebToken
-  skip_before_action :authenticate_request, only: [:create]
+  include JsonWebTokenValidation::UserTokenValidation
+  skip_before_action :validate_json_web_token, only: [:create]
   before_action :set_user, only: [:update, :show, :destroy]
 
   def index
@@ -27,6 +27,7 @@ class Api::UsersController < ApplicationController
   end
 
   def update
+    binding.pry
     if @user.update(user_params)
       render json: @user, status: :ok
     else
@@ -42,8 +43,7 @@ class Api::UsersController < ApplicationController
 
   def set_user
     begin
-      binding.pry
-      @user = User.find(@token["user_id"])
+      @user = User.find(@token["id"])
     rescue => exception
       render json: {message:"No user found"}, status: :not_found
     end

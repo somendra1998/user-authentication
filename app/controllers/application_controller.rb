@@ -1,14 +1,6 @@
 class ApplicationController < ActionController::API
-  include JsonWebToken
+  include JsonWebTokenValidation::UserTokenValidation
 
-  before_action :authenticate_request
+  before_action :validate_json_web_token
 
-  private
-
-  def authenticate_request
-    header = request.headers["token"]
-    header = header.split(" ").last if header
-    decoded = jwt_decode(header)
-    @current_user = User.find(decoded[:user_id])
-  end
 end
