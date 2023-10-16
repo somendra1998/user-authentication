@@ -8,7 +8,11 @@ Rails.application.routes.draw do
   namespace :api do
     resources :users, only:[:index, :create, :show]
     put 'update_profile', to: 'users#update'
+    post 'login',  to: 'logins#create'
   end
 
-  post 'auth/login', to: 'authentication#login'
+  namespace :admin do
+    post 'login',  to: 'admin_logins#create'
+  end
+
 end
